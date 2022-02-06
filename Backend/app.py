@@ -16,11 +16,21 @@ import struct
 import datetime
 from fpdf import FPDF, HTMLMixin
 from datetime import date, timedelta
-from constants import SEND_BYTES,RECV_LENGTH
+from constants import SEND_BYTES,RECV_LENGTH,VARIABLE_NAMES
 class HTML2PDF(FPDF, HTMLMixin):
     pass
 
 global start 
+
+import json
+ 
+# Opening JSON file
+f = open('config.json')
+ 
+# returns JSON object as
+# a dictionary
+config = json.load(f)
+COM_PORT = config['COM_PORT']
 
 ser=0
 
@@ -97,6 +107,7 @@ def cal_checksum_func(arr):
     return(lowCRC,highCRC)
 
 def run_and_get_data():
+    data = {}
     ser.flushInput()
     ser.flushOutput()
     ser.write(SEND_BYTES)   
@@ -116,12 +127,14 @@ def run_and_get_data():
         final_rec=new_byte
 
     vals = compute_float(final_rec)
-    return vals
+    for i in range(0,len(VARIABLE_NAMES)):
+        data[VARIABLE_NAMES[i]] = vals[i]
+    return data
             
-def run_serial(com):
+def run_serial():
     try:
         global ser
-        ser = serial.Serial("COM"+com, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
+        ser = serial.Serial(COM_PORT, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
         time.sleep(.5)
         return "true"
     except :
@@ -153,9 +166,8 @@ def get_fac_data():
 def connected():
     global start
     start = False
-    if request.method == 'POST':
-        data =request.form.to_dict()
-        return run_serial(data["com_port"])
+    if request.method == 'GET':
+        return run_serial()
      
 if __name__ == "__main__":
     ui.run()        
