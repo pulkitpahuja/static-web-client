@@ -1,0 +1,8 @@
+cx_Freeze==6.9
+Flask==2.0.2
+fpdf==1.7.2
+matplotlib==3.3.4
+pyserial==3.5
+python_dateutil==2.8.2
+webui==0.1.7
+XlsxWriter==3.0.2
