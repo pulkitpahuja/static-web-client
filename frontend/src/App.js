@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import MainPage from "./pages/MainPage/MainPage";
+import { EuiProvider } from "@elastic/eui";
+import '@elastic/eui/dist/eui_theme_dark.css';
 
 function App() {
+  const [isDark, setIsDark] = useState(true);
+  const colorModeHandler = () => {
+    setIsDark((prev) => !prev);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <EuiProvider colorMode={isDark ? "dark" : "light"}>
+      <div className="App">
+        <MainPage colorModeHandler={colorModeHandler} />
+      </div>
+    </EuiProvider>
   );
 }
 
