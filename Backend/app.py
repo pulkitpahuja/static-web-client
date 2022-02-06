@@ -5,34 +5,29 @@ from webui import WebUI
 import serial
 import sys
 import os
-import random
 import time
-import csv
 from dateutil.parser import parse
 from xlsxwriter.workbook import Workbook
 
-import threading
 import struct
 import datetime
 from fpdf import FPDF, HTMLMixin
 from datetime import date, timedelta
 from constants import SEND_BYTES,RECV_LENGTH,VARIABLE_NAMES
+ser=0
 class HTML2PDF(FPDF, HTMLMixin):
     pass
 
 global start 
+try:    
+    f = open('config.json')
+    config = json.load(f)
+    COM_PORT = config['COM_PORT']
+except:
+    sys.exit("Configurtion file not found. Please check the config.json file. Exiting...")    
 
-import json
- 
-# Opening JSON file
-f = open('config.json')
- 
-# returns JSON object as
-# a dictionary
-config = json.load(f)
-COM_PORT = config['COM_PORT']
 
-ser=0
+print(COM_PORT)
 
 app = Flask(__name__, static_url_path='', static_folder='build')
 ui = WebUI(app, debug=True) 
