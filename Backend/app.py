@@ -22,20 +22,9 @@ class HTML2PDF(FPDF, HTMLMixin):
 
 global start 
 
-def createFolder(directory):
-    try:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-    except OSError:
-        print ('Error: Creating directory. ' +  directory)
-
-createFolder('static/data_storage/')
-createFolder('static/output/')
-createFolder('static/csv/')
-
 ser=0
 
-app = Flask(__name__,static_folder='../build')
+app = Flask(__name__, static_url_path='', static_folder='build')
 ui = WebUI(app, debug=True) 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -58,8 +47,10 @@ byte_val={
 @app.route('/<path:path>')
 def index(path):
   '''Return index.html for all non-api routes'''
-  #pylint: disable=unused-argument
-  return send_from_directory(app.static_folder, 'index.html')
+  if path != "" and os.path.exists(f"{app.static_folder}/{path}"):
+        return send_from_directory(app.static_folder, path)
+  else:
+    return send_from_directory(app.static_folder, 'index.html')
    
 def compute_float(bytes_rec):
 
@@ -409,29 +400,14 @@ def get_dates(start_date,end_date):
 
 @app.route('/get_fac_data',methods = ['GET', 'POST', 'DELETE'])
 def get_fac_data():
-    if request.method == 'POST':
-        tempdict={"save_status":"Failed","transfer_status":"Failed"}
-        data =request.form.to_dict()
-
-        with open('static/data_storage/'+data["calib_number"]+'.json', 'w') as outfile:
-            json.dump(data, outfile)
-            tempdict["save_status"]="Success"
-        ##SERIAL PORT DATA TRANSFER TO METER TAKES PLACE HERE##
-        # try:
-            
-        # except:
-        #     tempdict["save_status"]="Failed"
-
-        return jsonify(tempdict)
-        
- 
+   pass
+    
 @app.route('/connected',methods = ['GET', 'POST', 'DELETE'])
 def connected():
     global start
     start = False
     if request.method == 'POST':
         data =request.form.to_dict()
-
         return run_serial(data["com_port"])
      
 if __name__ == "__main__":
