@@ -1,5 +1,6 @@
-from flask import Flask, render_template, Response, request, redirect, url_for,jsonify
+from flask import Flask, render_template, Response, request, redirect, url_for,jsonify,send_from_directory
 import json
+from flask_cors import CORS
 from webui import WebUI
 import serial
 import sys
@@ -34,10 +35,11 @@ createFolder('static/csv/')
 
 ser=0
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='../build')
 ui = WebUI(app, debug=True) 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+CORS(app)
 
 byte_val={
          "1":bytearray([0x03,0x03,000,000,000,0x04,0x45,0xeb]),  #kV
@@ -52,10 +54,12 @@ byte_val={
          "10":bytearray([0x06,0x03,000,000,000,0x02,0xc5,0xbc]), #Freq
         }
 
-@app.route('/')
-@app.route('/<name>')
-def hello(name=None):
-    return render_template('main.html', name={"text":name}) 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
+  '''Return index.html for all non-api routes'''
+  #pylint: disable=unused-argument
+  return send_from_directory(app.static_folder, 'index.html')
    
 def compute_float(bytes_rec):
 
