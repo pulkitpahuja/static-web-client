@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import classes from "./MainPage.module.css";
 import DataCard from "../../components/DataCard/DataCard";
 import {
   EuiPage,
@@ -12,8 +10,8 @@ import {
   EuiPageBody,
   EuiFlexGrid,
 } from "@elastic/eui";
+import axios from "axios";
 const MainPage = (props) => {
-  const { colorModeHandler } = props;
   const [meterData, setMeterData] = useState({
     V1: "--",
     V2: "--",
@@ -30,6 +28,30 @@ const MainPage = (props) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get("/connected")
+      .then(function (response) {
+        // handle success
+        const data = response.data;
+        if (data === "true") {
+        } else {
+          setError(true);
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        setError(true);
+      })
+      .then(function () {
+        // always executed
+        setIsLoading(false);
+      });
+  }, []);
+
   const loadingPrompt = (
     <EuiEmptyPrompt
       icon={<EuiLoadingLogo logo="logoKibana" size="xl" />}
@@ -43,8 +65,8 @@ const MainPage = (props) => {
       title={<h2>Error loading Dashboards</h2>}
       body={
         <p>
-          There was an error loading the Dashboard application. Contact your
-          administrator for help.
+          There was an error connecting to the meter. Please connect the USB
+          cable and try again.
         </p>
       }
     />
