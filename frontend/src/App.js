@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import MainPage from "./pages/MainPage/MainPage";
 import { EuiProvider } from "@elastic/eui";
-import '@elastic/eui/dist/eui_theme_dark.css';
+import '@elastic/eui/dist/eui_theme_light.css';
+import '@elastic/charts/dist/theme_only_light.css';
 
 function App() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const colorModeHandler = () => {
     setIsDark((prev) => !prev);
   };

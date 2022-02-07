@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { EuiSpacer, EuiFlexItem, EuiPanel } from "@elastic/eui";
+
 import Stat from "../Stat/Stat";
 import Graph from "../Graph/Graph";
 const DataCard = (props) => {
@@ -8,13 +9,8 @@ const DataCard = (props) => {
   return (
     <EuiFlexItem>
       <EuiPanel>
-        <div>
-          <Stat />
-        </div>
-        <EuiSpacer size="s" />
-        <div>
-          <Graph />
-        </div>
+        <Stat variableName={variableName} variableVal={variableVal} />
+        <Graph />
       </EuiPanel>
     </EuiFlexItem>
   );

@@ -1,10 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { EuiStat, EuiIcon } from "@elastic/eui";
 
 const Stat = (props) => {
-  return <div></div>;
+  const { variableName, variableVal } = props;
+  return (
+    <EuiStat
+      titleColor="success"
+      title={variableVal || "--"}
+      description={variableName || "--"}
+      textAlign="center"
+    >
+      <EuiIcon type="empty" />
+    </EuiStat>
+  );
 };
-
-Stat.propTypes = {};
 
 export default Stat;
