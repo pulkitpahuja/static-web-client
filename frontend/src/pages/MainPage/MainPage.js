@@ -4,12 +4,10 @@ import {
   EuiPage,
   EuiEmptyPrompt,
   EuiLoadingLogo,
-  EuiPageContentBody,
   EuiPageBody,
-  EuiFlexGroup,
   EuiFlexGrid,
-  EuiSpacer,
 } from "@elastic/eui";
+import { CONNECTED_LINK, DATA_LINK } from "../../Constants";
 import axios from "axios";
 const MainPage = (props) => {
   const [meterData, setMeterData] = useState({});
@@ -19,7 +17,7 @@ const MainPage = (props) => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://127.0.0.1:5000/mock_connected")
+      .get(CONNECTED_LINK)
       .then(function (response) {
         // handle success
         const data = response.data;
@@ -45,7 +43,7 @@ const MainPage = (props) => {
     if (!error && !isLoading) {
       timer = setInterval(() => {
         axios
-          .get("http://127.0.0.1:5000/mock_data")
+          .get(DATA_LINK)
           .then(function (response) {
             // handle success
             const data = response.data;
