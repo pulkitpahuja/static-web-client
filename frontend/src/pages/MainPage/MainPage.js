@@ -55,7 +55,7 @@ const MainPage = (props) => {
   const loadingPrompt = (
     <EuiEmptyPrompt
       icon={<EuiLoadingLogo logo="logoKibana" size="xl" />}
-      title={<h2>Loading Dashboards</h2>}
+      title={<h2>Connecting to device...</h2>}
     />
   );
   const errorPrompt = (
@@ -65,7 +65,7 @@ const MainPage = (props) => {
       title={<h2>Error loading Dashboards</h2>}
       body={
         <p>
-          There was an error connecting to the meter. Please connect the USB
+          There was an error connecting to the device. Please connect the USB
           cable and try again.
         </p>
       }
