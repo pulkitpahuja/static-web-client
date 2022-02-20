@@ -7,10 +7,9 @@ import Graph from "../Graph/Graph";
 const DataCard = (props) => {
   const { variableName, variableVal } = props;
   return (
-    <EuiFlexItem>
+    <EuiFlexItem style={{ width: "80px" }}>
       <EuiPanel>
         <Stat variableName={variableName} variableVal={variableVal} />
-        <Graph />
       </EuiPanel>
     </EuiFlexItem>
   );

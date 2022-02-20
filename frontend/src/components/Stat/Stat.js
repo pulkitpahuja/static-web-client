@@ -9,6 +9,7 @@ const Stat = (props) => {
       title={variableVal || "--"}
       description={variableName || "--"}
       textAlign="center"
+      titleSize="xs"
     >
       <EuiIcon type="empty" />
     </EuiStat>

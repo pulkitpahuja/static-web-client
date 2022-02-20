@@ -1,3 +1,4 @@
+import random
 from flask import (
     Flask,
     render_template,
@@ -155,7 +156,7 @@ def run_and_get_data():
             final_rec = new_byte
 
         vals = compute_float(final_rec)
-        for i,variable in enumerate(device["vars"]):
+        for i, variable in enumerate(device["vars"]):
             data[device["name"]][variable] = vals[i]
 
     return data
@@ -196,10 +197,83 @@ def get_dates(start_date, end_date):
     return lst
 
 
-@app.route("/get_data", methods=["GET"])
-def get_fac_data():
+@app.route("/data", methods=["GET"])
+def data():
     if request.method == "GET":
         return run_and_get_data()
+
+
+@app.route("/mock_data", methods=["GET"])
+def mock_data():
+    if request.method == "GET":
+        return jsonify(
+            {
+                1: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                    "V3": random.randint(100, 9999),
+                    "V4": random.randint(100, 9999),
+                    "V5": random.randint(100, 9999),
+                    "V6": random.randint(100, 9999),
+                    "V7": random.randint(100, 9999),
+                    "V8": random.randint(100, 9999),
+                    "V9": random.randint(100, 9999),
+                    "V10": random.randint(100, 9999),
+                    "V11": random.randint(100, 9999),
+                    "V12": random.randint(100, 9999),
+                    "V13": random.randint(100, 9999),
+                    "V14": random.randint(100, 9999),
+                    "V15": random.randint(100, 9999),
+                    "V16": random.randint(100, 9999),
+                    "V17": random.randint(100, 9999),
+                    "V18": random.randint(100, 9999),
+                    "V19": random.randint(100, 9999),
+                    "V20": random.randint(100, 9999),
+                },
+                2: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                    "V3": random.randint(100, 9999),
+                    "V4": random.randint(100, 9999),
+                    "V5": random.randint(100, 9999),
+                    "V6": random.randint(100, 9999),
+                    "V7": random.randint(100, 9999),
+                    "V8": random.randint(100, 9999),
+                    "V9": random.randint(100, 9999),
+                    "V10": random.randint(100, 9999),
+                    "V11": random.randint(100, 9999),
+                    "V12": random.randint(100, 9999),
+                    "V13": random.randint(100, 9999),
+                    "V14": random.randint(100, 9999),
+                    "V15": random.randint(100, 9999),
+                    "V16": random.randint(100, 9999),
+                    "V17": random.randint(100, 9999),
+                    "V18": random.randint(100, 9999),
+                    "V19": random.randint(100, 9999),
+                    "V20": random.randint(100, 9999),
+                },
+                3: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                },
+                4: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                },
+                5: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                },
+                6: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                },
+                7: {
+                    "V1": random.randint(100, 9999),
+                    "V2": random.randint(100, 9999),
+                },
+            }
+        )
 
 
 @app.route("/connected", methods=["GET", "POST", "DELETE"])
@@ -208,6 +282,14 @@ def connected():
     start = False
     if request.method == "GET":
         return run_serial()
+
+
+@app.route("/mock_connected", methods=["GET", "POST", "DELETE"])
+def mock_connected():
+    global start
+    start = False
+    if request.method == "GET":
+        return "true"
 
 
 if __name__ == "__main__":
