@@ -9,7 +9,7 @@ import {
 } from "@elastic/eui";
 import { CONNECTED_LINK, DATA_LINK } from "../../Constants";
 import axios from "axios";
-const MainPage = (props) => {
+const MainPage = () => {
   const [meterData, setMeterData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);

@@ -63,36 +63,10 @@ def index(path):
 
 
 def compute_float(bytes_rec):
+    list1 = [bytes_rec[4], bytes_rec[3], bytes_rec[6], bytes_rec[5]]
 
-    if len(bytes_rec) == 17:
-        list1 = [
-            [bytes_rec[4], bytes_rec[3], bytes_rec[6], bytes_rec[5]],
-            [bytes_rec[8], bytes_rec[7], bytes_rec[10], bytes_rec[9]],
-            [bytes_rec[12], bytes_rec[11], bytes_rec[14], bytes_rec[13]],
-        ]
-        final_val = list(struct.unpack("<f", bytearray(list1[0])))
-        final_val1 = list(struct.unpack("<f", bytearray(list1[1])))
-        final_val2 = list(struct.unpack("<f", bytearray(list1[2])))
-        return [
-            round(final_val[0], 2),
-            round(final_val1[0], 2),
-            round(final_val2[0], 2),
-        ]
-
-    if len(bytes_rec) == 13:
-        list1 = [
-            [bytes_rec[4], bytes_rec[3], bytes_rec[6], bytes_rec[5]],
-            [bytes_rec[8], bytes_rec[7], bytes_rec[10], bytes_rec[9]],
-        ]
-        final_val = list(struct.unpack("<f", bytearray(list1[0])))
-        final_val1 = list(struct.unpack("<f", bytearray(list1[1])))
-        return [round(final_val[0], 2), round(final_val1[0], 2)]
-
-    else:
-        list1 = [bytes_rec[4], bytes_rec[3], bytes_rec[6], bytes_rec[5]]
-
-        final_val = list(struct.unpack("<f", bytearray(list1)))
-        return round(final_val[0], 2)
+    final_val = list(struct.unpack("<f", bytearray(list1)))
+    return round(final_val[0], 2)
 
 
 def checksum_func(bytearray):
@@ -160,6 +134,7 @@ def run_and_get_data():
             data[device["name"]][variable] = vals[i]
 
     return data
+
 
 
 def run_serial():
