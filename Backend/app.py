@@ -1,11 +1,7 @@
 import random
 from flask import (
     Flask,
-    render_template,
-    Response,
     request,
-    redirect,
-    url_for,
     jsonify,
     send_from_directory,
 )
@@ -43,8 +39,6 @@ except:
     )
 
 
-print(COM_PORT)
-
 app = Flask(__name__, static_url_path="", static_folder="build")
 ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -63,15 +57,21 @@ def index(path):
 
 
 def compute_float(bytes_rec):
-    list1 = [bytes_rec[4], bytes_rec[3], bytes_rec[6], bytes_rec[5]]
+    data = []
+    bytes_rec.pop()
+    bytes_rec.pop()
+    del bytes_rec[:3]
+    for i in range(0, len(bytes_rec), 4):
+        list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
+        final_val = list(struct.unpack("<f", bytearray(list1)))
+        data.append(round(final_val[0], 2))
 
-    final_val = list(struct.unpack("<f", bytearray(list1)))
-    return round(final_val[0], 2)
+    return data
 
 
-def checksum_func(bytearray):
+def checksum_func(arr):
     checksum = 0xFFFF
-    for num in range(0, len(bytearray) - 2):
+    for num in range(0, len(arr) - 2):
         lsb = bytearray[num]
         checksum = checksum ^ lsb
         for count in range(1, 9):
@@ -84,7 +84,7 @@ def checksum_func(bytearray):
     checksum = checksum << 8
     highCRC = checksum >> 8
 
-    return (lowCRC, highCRC)
+    return lowCRC, highCRC
 
 
 def cal_checksum_func(arr):
@@ -104,7 +104,11 @@ def cal_checksum_func(arr):
     lowCRC = (checksum >> 8) % 256
     checksum = checksum << 8
     highCRC = (checksum >> 8) % 256
-    return (lowCRC, highCRC)
+
+    arr.append(highCRC)
+    arr.append(lowCRC)
+
+    return arr
 
 
 def run_and_get_data():
@@ -113,7 +117,8 @@ def run_and_get_data():
         RECV_LEN = device["recv_len"]
         ser.flushInput()
         ser.flushOutput()
-        ser.write(device["arr"])
+        to_send = cal_checksum_func(device["arr"])
+        ser.write(to_send)
         ser.flush()
         time.sleep(0.6)
         bytes_rec = ser.read(RECV_LEN)
@@ -134,7 +139,6 @@ def run_and_get_data():
             data[device["name"]][variable] = vals[i]
 
     return data
-
 
 
 def run_serial():
