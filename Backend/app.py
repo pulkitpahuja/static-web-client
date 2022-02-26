@@ -61,6 +61,8 @@ def compute_float(bytes_rec):
     bytes_rec.pop()
     bytes_rec.pop()
     del bytes_rec[:3]
+    if(not any(bytes_rec)):
+        return [0] * int(len(bytes_rec)/4) 
     for i in range(0, len(bytes_rec), 4):
         list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
         final_val = list(struct.unpack("<f", bytearray(list1)))
@@ -72,7 +74,7 @@ def compute_float(bytes_rec):
 def checksum_func(arr):
     checksum = 0xFFFF
     for num in range(0, len(arr) - 2):
-        lsb = bytearray[num]
+        lsb = arr[num]
         checksum = checksum ^ lsb
         for count in range(1, 9):
             lastbit = checksum & 0x0001
@@ -135,6 +137,7 @@ def run_and_get_data():
             final_rec = new_byte
 
         vals = compute_float(final_rec)
+        print(vals)
         for i, variable in enumerate(device["vars"]):
             data[device["name"]][variable] = vals[i]
 
