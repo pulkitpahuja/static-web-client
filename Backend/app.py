@@ -61,8 +61,8 @@ def compute_float(bytes_rec):
     bytes_rec.pop()
     bytes_rec.pop()
     del bytes_rec[:3]
-    if(not any(bytes_rec)):
-        return [0] * int(len(bytes_rec)/4) 
+    if not any(bytes_rec):
+        return ["-"] * int(len(bytes_rec) / 4)
     for i in range(0, len(bytes_rec), 4):
         list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
         final_val = list(struct.unpack("<f", bytearray(list1)))
@@ -86,8 +86,8 @@ def checksum_func(arr):
     checksum = checksum << 8
     highCRC = checksum >> 8
 
-    return lowCRC, highCRC
-
+    
+    return lowCRC & 0xFF == arr[-1] and highCRC & 0xFF == arr[-2]
 
 def cal_checksum_func(arr):
 
@@ -125,19 +125,12 @@ def run_and_get_data():
         time.sleep(0.6)
         bytes_rec = ser.read(RECV_LEN)
         if len(bytes_rec) < RECV_LEN:
-            bytes_rec = bytearray(RECV_LEN)
+            bytes_rec = bytearray([0] * RECV_LEN)
 
-        low, high = checksum_func(bytes_rec)
+        if (not checksum_func(bytes_rec)):
+            bytes_rec = bytearray([0] * RECV_LEN)            
 
-        if low & 0xFF == bytes_rec[-1] and high & 0xFF == bytes_rec[-2]:
-            final_rec = bytes_rec
-            print("CHECKSUM MATCHED")
-        else:
-            new_byte = bytearray(RECV_LEN)
-            final_rec = new_byte
-
-        vals = compute_float(final_rec)
-        print(vals)
+        vals = compute_float(bytes_rec)
         for i, variable in enumerate(device["vars"]):
             data[device["name"]][variable] = vals[i]
 
@@ -148,7 +141,7 @@ def run_serial():
     try:
         global ser
         ser = serial.Serial(
-            "COM"+COM_PORT,
+            "COM" + COM_PORT,
             9600,
             serial.EIGHTBITS,
             serial.PARITY_NONE,
