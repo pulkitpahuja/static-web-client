@@ -1,35 +1,5 @@
 SEND_CONFIG = [
-    {
-        "recv_len": 10,
-        "arr": bytearray([0x01, 0x03, 000, 000, 000, 0x02]),
-        "vars": ["AC-W"],  ##order matters
-        "name": 1,
-    },
-    {
-        "recv_len": 10,
-        "arr": bytearray([0x02, 0x03, 000, 000, 000, 0x02]),
-        "vars": ["AC-W"],  ##order matters
-        "name": 2,
-    },
-    {
-        "recv_len": 10,
-        "arr": bytearray([0x03, 0x03, 000, 000, 000, 0x02]),
-        "vars": ["DC-W"],
-        "name": 3,
-    },
-    {
-        "recv_len": 10,
-        "arr": bytearray([0x04, 0x03, 000, 000, 000, 0x02]),
-        "vars": ["DC-W"],
-        "name": 4,
-    },
-    {
-        "recv_len": 13,
-        "arr": bytearray([0x05, 0x03, 000, 000, 000, 0x04]),
-        "vars": ["Eff1", "Eff2"],
-        "name": 5,
-    },
-    {
+        {
         "recv_len": 85,
         "arr": bytearray([0x06, 0x03, 000, 000, 000, 0x24]),
         "vars": [
@@ -54,7 +24,7 @@ SEND_CONFIG = [
             "H13-V",
             "H15-V",
         ],
-        "name": 6,
+        "name": "1",
     },
     {
         "recv_len": 85,
@@ -81,6 +51,36 @@ SEND_CONFIG = [
             "H13-V",
             "H15-V",
         ],
-        "name": 7,
+        "name": "2",
+    },
+    {
+        "recv_len": 9,
+        "arr": bytearray([0x01, 0x03, 000, 000, 000, 0x02]),
+        "vars": ["AC-W"],  ##order matters
+        "name": "3",
+    },
+    {
+        "recv_len": 9,
+        "arr": bytearray([0x02, 0x03, 000, 000, 000, 0x02]),
+        "vars": ["AC-W"],  ##order matters
+        "name": "4",
+    },
+    {
+        "recv_len": 9,
+        "arr": bytearray([0x03, 0x03, 000, 000, 000, 0x02]),
+        "vars": ["DC-W"],
+        "name": "5",
+    },
+    {
+        "recv_len": 9,
+        "arr": bytearray([0x04, 0x03, 000, 000, 000, 0x02]),
+        "vars": ["DC-W"],
+        "name": "6",
+    },
+    {
+        "recv_len": 13,
+        "arr": bytearray([0x05, 0x03, 000, 000, 000, 0x04]),
+        "vars": ["Eff1", "Eff2"],
+        "name": "7",
     },
 ]

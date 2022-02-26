@@ -53,6 +53,7 @@ def compute_float(bytes_rec):
     bytes_rec.pop()
     bytes_rec.pop()
     del bytes_rec[:3]
+    print(bytes_rec)
     if not any(bytes_rec):
         return ["-"] * int(len(bytes_rec) / 4)
     for i in range(0, len(bytes_rec), 4):
@@ -109,6 +110,7 @@ def run_and_get_data():
     for device in SEND_CONFIG:
         RECV_LEN = device["recv_len"]
         ser.flushInput()
+        data[device["name"]] = {}
         ser.flushOutput()
         to_send = cal_checksum_func(device["arr"])
         ser.write(to_send)
@@ -123,7 +125,9 @@ def run_and_get_data():
 
         vals = compute_float(bytes_rec)
         for i, variable in enumerate(device["vars"]):
+            print(i,variable)
             data[device["name"]][variable] = vals[i]
+            print(data)
 
     return data
 
@@ -165,7 +169,7 @@ def get_dates(start_date, end_date):
 @app.route("/data", methods=["GET"])
 def data():
     if request.method == "GET":
-        return run_and_get_data()
+        return jsonify(run_and_get_data())
 
 
 @app.route("/mock_data", methods=["GET"])
