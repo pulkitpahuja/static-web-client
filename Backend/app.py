@@ -12,21 +12,13 @@ import serial
 import sys
 import os
 import time
-from dateutil.parser import parse
-from xlsxwriter.workbook import Workbook
 
 import struct
 import datetime
-from fpdf import FPDF, HTMLMixin
 from datetime import date, timedelta
 from constants import SEND_CONFIG
 
-ser = 0
-
-
-class HTML2PDF(FPDF, HTMLMixin):
-    pass
-
+ser = serial.Serial()
 
 global start
 try:
@@ -85,7 +77,6 @@ def checksum_func(arr):
     lowCRC = checksum >> 8
     checksum = checksum << 8
     highCRC = checksum >> 8
-
     
     return lowCRC & 0xFF == arr[-1] and highCRC & 0xFF == arr[-2]
 
@@ -140,14 +131,13 @@ def run_and_get_data():
 def run_serial():
     try:
         global ser
-        ser = serial.Serial(
-            "COM" + COM_PORT,
-            9600,
-            serial.EIGHTBITS,
-            serial.PARITY_NONE,
-            serial.STOPBITS_ONE,
-            timeout=1,
-        )
+        ser.baudrate = 9600
+        ser.port = "COM" + COM_PORT
+        ser.timeout = 1
+        ser.parity = serial.PARITY_NONE
+        ser.stopbits = serial.STOPBITS_ONE
+        ser.bytesize = serial.EIGHTBITS
+        ser.open()
         time.sleep(0.5)
         return "true"
     except:
