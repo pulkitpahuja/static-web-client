@@ -145,7 +145,7 @@ def run_serial():
     try:
         global ser
         ser = serial.Serial(
-            COM_PORT,
+            "COM"+COM_PORT,
             9600,
             serial.EIGHTBITS,
             serial.PARITY_NONE,
