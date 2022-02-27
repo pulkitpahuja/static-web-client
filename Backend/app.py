@@ -50,9 +50,9 @@ def index(path):
 
 def compute_float(bytes_rec):
     data = []
-    bytes_rec.pop()
-    bytes_rec.pop()
-    del bytes_rec[:3]
+    del bytes_rec[-1]
+    del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
+    del bytes_rec[:3]  ## 
     print(bytes_rec)
     if not any(bytes_rec):
         return ["-"] * int(len(bytes_rec) / 4)
