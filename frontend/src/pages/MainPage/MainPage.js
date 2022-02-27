@@ -20,8 +20,13 @@ const MainPage = () => {
       .get(CONNECTED_LINK)
       .then(function (response) {
         // handle success
-        const data = response.data;
-        if (data) {
+        const d = response.data;
+        if (d) {
+          var eventSource = new EventSource(DATA_LINK);
+          eventSource.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            setMeterData(data);
+          };
         } else {
           setError(true);
         }
@@ -57,12 +62,6 @@ const MainPage = () => {
       //       // always executed
       //     });
       // }, 5000);
-
-      var eventSource = new EventSource(DATA_LINK);
-      eventSource.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        setMeterData(data);
-      };
     }
   }, [isLoading, error]);
 
