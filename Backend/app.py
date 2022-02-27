@@ -50,17 +50,17 @@ def index(path):
 
 def compute_float(bytes_rec):
     data = []
+    bytes_rec = list(bytes_rec)
     del bytes_rec[-1]
     del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
-    del bytes_rec[:3]  ## 
-    print(bytes_rec)
-    if not any(bytes_rec):
-        return ["-"] * int(len(bytes_rec) / 4)
+    del bytes_rec[:3]  ##
+    print(bytes_rec) 
     for i in range(0, len(bytes_rec), 4):
         list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
         final_val = list(struct.unpack("<f", bytearray(list1)))
         data.append(round(final_val[0], 2))
 
+    print(data)
     return data
 
 
@@ -131,9 +131,7 @@ def run_and_get_data():
 
         vals = compute_float(bytes_rec)
         for i, variable in enumerate(device["vars"]):
-            print(i,variable)
             data[device["name"]][variable] = vals[i]
-            print(data)
 
     return data
 
