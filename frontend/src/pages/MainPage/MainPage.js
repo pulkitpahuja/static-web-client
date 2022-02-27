@@ -56,7 +56,7 @@ const MainPage = () => {
           .then(function () {
             // always executed
           });
-      }, 2500);
+      }, 5000);
     }
 
     return () => clearInterval(timer);
