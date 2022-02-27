@@ -109,14 +109,20 @@ def run_and_get_data():
     data = {}
     for device in SEND_CONFIG:
         RECV_LEN = device["recv_len"]
-        ser.flushInput()
         data[device["name"]] = {}
-        ser.flushOutput()
+        bytes_rec = []
         to_send = cal_checksum_func(device["arr"])
-        ser.write(to_send)
-        ser.flush()
-        time.sleep(0.6)
-        bytes_rec = ser.read(RECV_LEN)
+        try:
+            ser.flushInput()
+            ser.flushOutput()
+            ser.write(to_send)
+            ser.flush()
+            time.sleep(0.6)
+            bytes_rec = ser.read(RECV_LEN)
+        except:
+            bytes_rec = bytearray([0] * RECV_LEN)
+
+        print("________RECIEVED_______: ", bytes_rec)
         if len(bytes_rec) < RECV_LEN:
             bytes_rec = bytearray([0] * RECV_LEN)
 
@@ -243,6 +249,8 @@ def mock_data():
                 },
             }
         )
+
+
 
 
 @app.route("/connected", methods=["GET", "POST", "DELETE"])
