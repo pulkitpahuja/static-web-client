@@ -6,8 +6,8 @@ const Stat = (props) => {
   return (
     <EuiStat
       titleColor="success"
-      title={variableVal || "--"}
-      description={variableName || "--"}
+      title={variableVal}
+      description={variableName}
       textAlign="center"
       titleSize="xs"
     >
