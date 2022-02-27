@@ -2,6 +2,7 @@ import random
 from flask import (
     Flask,
     request,
+    Response,
     jsonify,
     send_from_directory,
 )
@@ -54,7 +55,7 @@ def compute_float(bytes_rec):
     del bytes_rec[-1]
     del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
     del bytes_rec[:3]  ##
-    print(bytes_rec) 
+    print(bytes_rec)
     for i in range(0, len(bytes_rec), 4):
         list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
         final_val = list(struct.unpack("<f", bytearray(list1)))
@@ -78,8 +79,9 @@ def checksum_func(arr):
     lowCRC = checksum >> 8
     checksum = checksum << 8
     highCRC = checksum >> 8
-    
+
     return lowCRC & 0xFF == arr[-1] and highCRC & 0xFF == arr[-2]
+
 
 def cal_checksum_func(arr):
 
@@ -126,8 +128,8 @@ def run_and_get_data():
         if len(bytes_rec) < RECV_LEN:
             bytes_rec = bytearray([0] * RECV_LEN)
 
-        if (not checksum_func(bytes_rec)):
-            bytes_rec = bytearray([0] * RECV_LEN)            
+        if not checksum_func(bytes_rec):
+            bytes_rec = bytearray([0] * RECV_LEN)
 
         vals = compute_float(bytes_rec)
         for i, variable in enumerate(device["vars"]):
@@ -170,11 +172,16 @@ def get_dates(start_date, end_date):
     return lst
 
 
-@app.route("/data", methods=["GET"])
+@app.route("/data")
 def data():
-    if request.method == "GET":
-        return jsonify(run_and_get_data())
+    def dataStream():
+        while True:
+            data = run_and_get_data()
+            yield "data: " + json.dumps(data) + "\n\n"
+            time.sleep(0.1)
 
+    return Response(dataStream(), mimetype="text/event-stream")
+   
 
 @app.route("/mock_data", methods=["GET"])
 def mock_data():
@@ -249,6 +256,21 @@ def mock_data():
         )
 
 
+def get_message():
+    """this could be any function that blocks until data is ready"""
+    time.sleep(2.0)
+    s = time.ctime(time.time())
+    return s
+
+
+@app.route("/stream")
+def stream():
+    def eventStream():
+        while True:
+            # wait for source data to be available, then push it
+            yield "data: {}\n\n".format(get_message())
+
+    return Response(eventStream(), mimetype="text/event-stream")
 
 
 @app.route("/connected", methods=["GET", "POST", "DELETE"])

@@ -41,22 +41,28 @@ const MainPage = () => {
     let timer;
     console.log(error, isLoading);
     if (!error && !isLoading) {
-      timer = setInterval(() => {
-        axios
-          .get(DATA_LINK)
-          .then(function (response) {
-            // handle success
-            const data = response.data;
-            setMeterData(data);
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .then(function () {
-            // always executed
-          });
-      }, 5000);
+      // timer = setInterval(() => {
+      //   axios
+      //     .get(DATA_LINK)
+      //     .then(function (response) {
+      //       // handle success
+      //       const data = response.data;
+      //       setMeterData(data);
+      //     })
+      //     .catch(function (error) {
+      //       // handle error
+      //       console.log(error);
+      //     })
+      //     .then(function () {
+      //       // always executed
+      //     });
+      // }, 5000);
+
+      var eventSource = new EventSource(DATA_LINK);
+      eventSource.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        setMeterData(data);
+      };
     }
 
     return () => clearInterval(timer);
