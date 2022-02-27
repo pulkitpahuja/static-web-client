@@ -119,7 +119,7 @@ def run_and_get_data():
             ser.flushOutput()
             ser.write(to_send)
             ser.flush()
-            time.sleep(0.6)
+            time.sleep(0.4)
             bytes_rec = ser.read(RECV_LEN)
         except:
             bytes_rec = bytearray([0] * RECV_LEN)
