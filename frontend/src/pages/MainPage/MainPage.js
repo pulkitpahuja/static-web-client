@@ -64,8 +64,6 @@ const MainPage = () => {
         setMeterData(data);
       };
     }
-
-    return () => clearInterval(timer);
   }, [isLoading, error]);
 
   const loadingPrompt = (
