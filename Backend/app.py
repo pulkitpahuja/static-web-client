@@ -107,8 +107,8 @@ def cal_checksum_func(arr):
 
 def run_and_get_data():
     data = {}
+
     for device in SEND_CONFIG:
-        start = time.process_time()
         RECV_LEN = device["recv_len"]
         data[device["name"]] = {}
         bytes_rec = []
@@ -118,7 +118,6 @@ def run_and_get_data():
             ser.flushOutput()
             ser.write(to_send)
             ser.flush()
-            time.sleep(0.4)
             bytes_rec = ser.read(RECV_LEN)
         except:
             bytes_rec = bytearray([0] * RECV_LEN)
@@ -134,7 +133,6 @@ def run_and_get_data():
         for i, variable in enumerate(device["vars"]):
             data[device["name"]][variable] = vals[i]
 
-    print(time.process_time() - start)
     return data
 
 
@@ -143,7 +141,7 @@ def run_serial():
         global ser
         ser.baudrate = 9600
         ser.port = "COM" + COM_PORT
-        ser.timeout = 1
+        ser.timeout = 0.7
         ser.parity = serial.PARITY_NONE
         ser.stopbits = serial.STOPBITS_ONE
         ser.bytesize = serial.EIGHTBITS
