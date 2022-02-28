@@ -5,6 +5,9 @@ import {
   EuiEmptyPrompt,
   EuiLoadingLogo,
   EuiPageBody,
+  EuiPageHeader,
+  EuiTitle,
+  EuiButton,
   EuiFlexGrid,
 } from "@elastic/eui";
 import { CONNECTED_LINK, DATA_LINK } from "../../Constants";
@@ -13,6 +16,9 @@ const MainPage = () => {
   const [meterData, setMeterData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [eventSource, setEventSource] = useState(null);
+  const [status, setStatus] = useState("Stopped");
 
   useEffect(() => {
     setIsLoading(true);
@@ -22,11 +28,6 @@ const MainPage = () => {
         // handle success
         const d = response.data;
         if (d) {
-          var eventSource = new EventSource(DATA_LINK);
-          eventSource.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            setMeterData(data);
-          };
         } else {
           setError(true);
         }
@@ -41,29 +42,6 @@ const MainPage = () => {
         setIsLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    let timer;
-    console.log(error, isLoading);
-    if (!error && !isLoading) {
-      // timer = setInterval(() => {
-      //   axios
-      //     .get(DATA_LINK)
-      //     .then(function (response) {
-      //       // handle success
-      //       const data = response.data;
-      //       setMeterData(data);
-      //     })
-      //     .catch(function (error) {
-      //       // handle error
-      //       console.log(error);
-      //     })
-      //     .then(function () {
-      //       // always executed
-      //     });
-      // }, 5000);
-    }
-  }, [isLoading, error]);
 
   const loadingPrompt = (
     <EuiEmptyPrompt
@@ -84,10 +62,64 @@ const MainPage = () => {
       }
     />
   );
+
+  const startStrean = () => {
+    const eSource = new EventSource(DATA_LINK);
+    eSource.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      setStatus("Running");
+      setMeterData(data);
+      setIsLoading(false);
+    };
+    if (Object.keys(meterData).length === 0) {
+      setIsLoading(true);
+    }
+    setStarted(true);
+    setEventSource(eSource);
+  };
+
+  const stopStream = (type) => {
+    eventSource.close();
+    console.log(eventSource.readyState);
+    if (type === "stop") {
+      setStatus("Stopped");
+      setStarted(false);
+    } else {
+      setStatus("Paused");
+    }
+  };
   return (
     <EuiPage paddingSize="l">
       <EuiPageBody>
-        {isLoading ? (
+        <EuiPageHeader
+          iconType="logoElastic"
+          pageTitle={status}
+          rightSideItems={[
+            <EuiButton
+              onClick={() => {
+                stopStream("stop");
+              }}
+              color="danger"
+            >
+              Stop
+            </EuiButton>,
+            <EuiButton onClick={stopStream} color="accent">
+              Pause
+            </EuiButton>,
+            <EuiButton onClick={startStrean} color="success">
+              Start
+            </EuiButton>,
+          ]}
+          paddingSize="l"
+        />
+        {!started ? (
+          <EuiTitle style={{ textAlign: "center" }} size="l">
+            <h1>
+              Please press the start button to start the communication. <br />{" "}
+              Please wait for 20 seconds before starting
+            </h1>
+          </EuiTitle>
+        ) : isLoading ? (
           loadingPrompt
         ) : error ? (
           errorPrompt

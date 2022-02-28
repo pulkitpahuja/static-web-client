@@ -118,6 +118,7 @@ def run_and_get_data():
             ser.flush()
             bytes_rec = ser.read(RECV_LEN)
         except:
+            time.sleep(0.5)
             bytes_rec = bytearray([0] * RECV_LEN)
 
         print("________RECIEVED_______: ", bytes_rec)
@@ -178,78 +179,6 @@ def data():
 
     return Response(dataStream(), mimetype="text/event-stream")
    
-
-@app.route("/mock_data", methods=["GET"])
-def mock_data():
-    if request.method == "GET":
-        return jsonify(
-            {
-                1: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                    "V3": random.randint(100, 9999),
-                    "V4": random.randint(100, 9999),
-                    "V5": random.randint(100, 9999),
-                    "V6": random.randint(100, 9999),
-                    "V7": random.randint(100, 9999),
-                    "V8": random.randint(100, 9999),
-                    "V9": random.randint(100, 9999),
-                    "V10": random.randint(100, 9999),
-                    "V11": random.randint(100, 9999),
-                    "V12": random.randint(100, 9999),
-                    "V13": random.randint(100, 9999),
-                    "V14": random.randint(100, 9999),
-                    "V15": random.randint(100, 9999),
-                    "V16": random.randint(100, 9999),
-                    "V17": random.randint(100, 9999),
-                    "V18": random.randint(100, 9999),
-                    "V19": random.randint(100, 9999),
-                    "V20": random.randint(100, 9999),
-                },
-                2: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                    "V3": random.randint(100, 9999),
-                    "V4": random.randint(100, 9999),
-                    "V5": random.randint(100, 9999),
-                    "V6": random.randint(100, 9999),
-                    "V7": random.randint(100, 9999),
-                    "V8": random.randint(100, 9999),
-                    "V9": random.randint(100, 9999),
-                    "V10": random.randint(100, 9999),
-                    "V11": random.randint(100, 9999),
-                    "V12": random.randint(100, 9999),
-                    "V13": random.randint(100, 9999),
-                    "V14": random.randint(100, 9999),
-                    "V15": random.randint(100, 9999),
-                    "V16": random.randint(100, 9999),
-                    "V17": random.randint(100, 9999),
-                    "V18": random.randint(100, 9999),
-                    "V19": random.randint(100, 9999),
-                    "V20": random.randint(100, 9999),
-                },
-                3: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                },
-                4: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                },
-                5: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                },
-                6: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                },
-                7: {
-                    "V1": random.randint(100, 9999),
-                    "V2": random.randint(100, 9999),
-                },
-            }
-        )
 
 
 def get_message():

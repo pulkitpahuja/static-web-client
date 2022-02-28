@@ -14,6 +14,7 @@ const DeviceCard = (props) => {
       <EuiFlexGrid columns={6}>
         {Object.keys(deviceData).map((dataPoint, idx) => (
           <DataCard
+            key={Math.random()}
             variableName={dataPoint}
             variableVal={deviceData[dataPoint]}
           />
