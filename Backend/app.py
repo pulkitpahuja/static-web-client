@@ -6,6 +6,7 @@ from flask import (
     jsonify,
     send_from_directory,
 )
+from werkzeug.serving import WSGIRequestHandler
 import json
 from flask_cors import CORS
 from webui import WebUI
@@ -31,7 +32,7 @@ except:
         "Configurtion file not found. Please check the config.json file. Exiting..."
     )
 
-
+WSGIRequestHandler.protocol_version = "HTTP/1.1"
 app = Flask(__name__, static_url_path="", static_folder="build")
 ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -177,7 +178,7 @@ def data():
             yield "data: " + json.dumps(data) + "\n\n"
             time.sleep(0.1)
 
-    return Response(dataStream(), mimetype="text/event-stream")
+    return Response(dataStream(), mimetype="text/event-stream",connec)
    
 
 

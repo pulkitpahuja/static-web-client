@@ -65,15 +65,13 @@ const MainPage = () => {
 
   const startStrean = () => {
     const eSource = new EventSource(DATA_LINK);
+    setIsLoading(true);
     eSource.onmessage = function (e) {
       const data = JSON.parse(e.data);
       setStatus("Running");
       setMeterData(data);
       setIsLoading(false);
     };
-    if (Object.keys(meterData).length === 0) {
-      setIsLoading(true);
-    }
     setStarted(true);
     setEventSource(eSource);
   };
