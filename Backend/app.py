@@ -62,7 +62,6 @@ def compute_float(bytes_rec):
 
     return data
 
-
 def checksum_func(arr):
     checksum = 0xFFFF
     for num in range(0, len(arr) - 2):
@@ -110,11 +109,8 @@ def run_and_get_data():
         RECV_LEN = device["recv_len"]
         data[device["name"]] = {}
         bytes_rec = []
+        to_send = []
         to_send = device["arr"]
-        low,high = cal_checksum_func(to_send)
-        to_send.append(high)
-        to_send.append(low)
-
         try:
             ser.flushInput()
             ser.flushOutput()

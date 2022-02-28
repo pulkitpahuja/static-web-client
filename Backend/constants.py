@@ -1,7 +1,7 @@
 SEND_CONFIG = [
         {
         "recv_len": 85,
-        "arr": bytearray([0x06, 0x03, 000, 000, 000, 0x24]),
+        "arr": bytearray([0x06, 0x03, 000, 000, 000, 0x24,68,102]),
         "vars": [
             "V",
             "I",
@@ -28,7 +28,7 @@ SEND_CONFIG = [
     },
     {
         "recv_len": 85,
-        "arr": bytearray([0x07, 0x03, 000, 000, 000, 0x24]),
+        "arr": bytearray([0x07, 0x03, 000, 000, 000, 0x24,69,183]),
         "vars": [
             "V",
             "I",
@@ -55,31 +55,31 @@ SEND_CONFIG = [
     },
     {
         "recv_len": 9,
-        "arr": bytearray([0x01, 0x03, 000, 000, 000, 0x02]),
+        "arr": bytearray([0x01, 0x03, 000, 000, 000, 0x02,196,11]),
         "vars": ["AC-W"],  ##order matters
         "name": "3",
     },
     {
         "recv_len": 9,
-        "arr": bytearray([0x02, 0x03, 000, 000, 000, 0x02]),
+        "arr": bytearray([0x02, 0x03, 000, 000, 000, 0x02,196,56]),
         "vars": ["AC-W"],  ##order matters
         "name": "4",
     },
     {
         "recv_len": 9,
-        "arr": bytearray([0x03, 0x03, 000, 000, 000, 0x02]),
+        "arr": bytearray([0x03, 0x03, 000, 000, 000, 0x02,197,233]),
         "vars": ["DC-W"],
         "name": "5",
     },
     {
         "recv_len": 9,
-        "arr": bytearray([0x04, 0x03, 000, 000, 000, 0x02]),
+        "arr": bytearray([0x04, 0x03, 000, 000, 000, 0x02,196,94]),
         "vars": ["DC-W"],
         "name": "6",
     },
     {
         "recv_len": 13,
-        "arr": bytearray([0x05, 0x03, 000, 000, 000, 0x04]),
+        "arr": bytearray([0x05, 0x03, 000, 000, 000, 0x04,69,141]),
         "vars": ["Eff1", "Eff2"],
         "name": "7",
     },
