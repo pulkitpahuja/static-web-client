@@ -82,7 +82,7 @@ def checksum_func(arr):
 
 
 def cal_checksum_func(arr):
-
+    
     checksum = 0xFFFF
     for num in range(0, len(arr)):
 
@@ -99,10 +99,8 @@ def cal_checksum_func(arr):
     checksum = checksum << 8
     highCRC = (checksum >> 8) % 256
 
-    arr.append(highCRC)
-    arr.append(lowCRC)
-
-    return arr
+    
+    return lowCRC,highCRC
 
 
 def run_and_get_data():
@@ -112,7 +110,11 @@ def run_and_get_data():
         RECV_LEN = device["recv_len"]
         data[device["name"]] = {}
         bytes_rec = []
-        to_send = cal_checksum_func(device["arr"])
+        to_send = device["arr"]
+        low,high = cal_checksum_func(to_send)
+        to_send.append(high)
+        to_send.append(low)
+
         try:
             ser.flushInput()
             ser.flushOutput()
