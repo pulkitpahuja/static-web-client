@@ -30,7 +30,7 @@ except:
     )
 
 WSGIRequestHandler.protocol_version = "HTTP/1.1"
-app = Flask(__name__, static_url_path="", static_folder="build")
+app = Flask(__name__, static_url_path="", static_folder="webpage")
 ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
