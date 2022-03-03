@@ -54,10 +54,14 @@ const MainPage = () => {
       color="danger"
       title={<h2>Error loading Dashboards</h2>}
       body={
-        <p>
-          There was an error connecting to the device. Please connect the USB
-          cable and try again.
-        </p>
+        <div>
+          <p>
+            There was an error connecting to the device. Please connect the USB
+            cable and try again.
+          </p>
+          <p>OR</p>
+          <p>The program has shut down</p>
+        </div>
       }
     />
   );
@@ -87,12 +91,12 @@ const MainPage = () => {
         const d = response.data;
         if (d) {
         } else {
-          window.close();
+          setError(true);
         }
       })
       .catch(function (error) {
         // handle error
-        window.close();
+        setError(true);
       });
   };
   return (
