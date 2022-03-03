@@ -132,8 +132,8 @@ def run_and_get_data():
             ac_2_val = data[ac_2["name"]][ac_2["vars"][0]]
             dc_1_val = data[dc_1["name"]][dc_1["vars"][0]]
             dc_2_val = data[dc_2["name"]][dc_2["vars"][0]]
-            data[device["name"]]["Eff1"] = (dc_1_val * 100) / ac_1_val if ac_1_val != 0 else "-"
-            data[device["name"]]["Eff2"] = (ac_2_val * 100) / dc_2_val if dc_2_val != 0 else "-"
+            data[device["name"]]["Eff1"] = round(((dc_1_val * 100) / ac_1_val),2) if ac_1_val != 0 else "-"
+            data[device["name"]]["Eff2"] = round(((ac_2_val * 100) / dc_2_val),2) if dc_2_val != 0 else "-"
             continue
         try:
             ser.flushInput()
