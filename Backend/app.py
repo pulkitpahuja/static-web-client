@@ -7,12 +7,11 @@ from flask import (
     send_from_directory,
 )
 from werkzeug.serving import WSGIRequestHandler
-import json
+import json, os, signal
 from flask_cors import CORS
 from webui import WebUI
 import serial
 import sys
-import os
 import time
 
 import struct
@@ -21,8 +20,7 @@ from datetime import date, timedelta
 from constants import SEND_CONFIG
 
 ser = serial.Serial()
-
-global start
+overall_state = False
 try:
     f = open("config.json")
     config = json.load(f)
@@ -38,6 +36,7 @@ ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 CORS(app)
+
 
 
 @app.route("/", defaults={"path": ""})
@@ -63,6 +62,7 @@ def compute_float(bytes_rec):
 
     return data
 
+
 def checksum_func(arr):
     checksum = 0xFFFF
     for num in range(0, len(arr) - 2):
@@ -82,7 +82,7 @@ def checksum_func(arr):
 
 
 def cal_checksum_func(arr):
-    
+
     checksum = 0xFFFF
     for num in range(0, len(arr)):
 
@@ -99,8 +99,19 @@ def cal_checksum_func(arr):
     checksum = checksum << 8
     highCRC = (checksum >> 8) % 256
 
-    
-    return lowCRC,highCRC
+    return lowCRC, highCRC
+
+
+def findElementOnDeviceID(id):
+    copy = {}
+    for x in SEND_CONFIG:
+        if x["arr"][0] == id:
+            copy = {**x}
+            break
+        else:
+            x = None
+
+    return copy
 
 
 def run_and_get_data():
@@ -112,6 +123,18 @@ def run_and_get_data():
         bytes_rec = []
         to_send = []
         to_send = device["arr"]
+        if to_send[0] == 0x05:
+            ac_1 = findElementOnDeviceID(0x01)
+            ac_2 = findElementOnDeviceID(0x02)
+            dc_1 = findElementOnDeviceID(0x03)
+            dc_2 = findElementOnDeviceID(0x04)
+            ac_1_val = data[ac_1["name"]][ac_1["vars"][0]]
+            ac_2_val = data[ac_2["name"]][ac_2["vars"][0]]
+            dc_1_val = data[dc_1["name"]][dc_1["vars"][0]]
+            dc_2_val = data[dc_2["name"]][dc_2["vars"][0]]
+            data[device["name"]]["Eff1"] = (dc_1_val * 100) / ac_1_val if ac_1_val != 0 else "-"
+            data[device["name"]]["Eff2"] = (ac_2_val * 100) / dc_2_val if dc_2_val != 0 else "-"
+            continue
         try:
             ser.flushInput()
             ser.flushOutput()
@@ -178,8 +201,15 @@ def data():
             yield "data: " + json.dumps(data) + "\n\n"
             time.sleep(0.1)
 
-    return Response(dataStream(), mimetype="text/event-stream",connec)
-   
+    return Response(dataStream(), mimetype="text/event-stream")
+
+
+@app.route("/exit_prog", methods=["GET", "POST", "DELETE"])
+def exit_prog():
+    if request.method == "GET":
+        sig = getattr(signal, "SIGKILL", signal.SIGTERM)
+        os.kill(os.getpid(), sig)
+        return "Killed"
 
 
 def get_message():

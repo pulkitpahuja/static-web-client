@@ -10,7 +10,7 @@ import {
   EuiButton,
   EuiFlexGrid,
 } from "@elastic/eui";
-import { CONNECTED_LINK, DATA_LINK } from "../../Constants";
+import { CONNECTED_LINK, DATA_LINK, EXIT_PROGRAM } from "../../Constants";
 import axios from "axios";
 const MainPage = () => {
   const [meterData, setMeterData] = useState({});
@@ -18,7 +18,6 @@ const MainPage = () => {
   const [error, setError] = useState(false);
   const [started, setStarted] = useState(false);
   const [eventSource, setEventSource] = useState(null);
-  const [status, setStatus] = useState("Stopped");
 
   useEffect(() => {
     setIsLoading(true);
@@ -68,7 +67,6 @@ const MainPage = () => {
     setIsLoading(true);
     eSource.onmessage = function (e) {
       const data = JSON.parse(e.data);
-      setStatus("Running");
       setMeterData(data);
       setIsLoading(false);
     };
@@ -76,51 +74,57 @@ const MainPage = () => {
     setEventSource(eSource);
   };
 
-  const stopStream = (type) => {
-    eventSource.close();
-    console.log(eventSource.readyState);
-    if (type === "stop") {
-      setStatus("Stopped");
+  const stopStream = () => {
+    if (eventSource) {
+      eventSource.close();
+      console.log(eventSource.readyState);
       setStarted(false);
-    } else {
-      setStatus("Paused");
     }
+    axios
+      .get(EXIT_PROGRAM)
+      .then(function (response) {
+        // handle success
+        const d = response.data;
+        if (d) {
+        } else {
+          window.close();
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        window.close();
+      });
   };
   return (
     <EuiPage paddingSize="l">
       <EuiPageBody>
         <EuiPageHeader
           iconType="logoElastic"
-          pageTitle={status}
+          pageTitle="Data Monitoring"
           rightSideItems={[
+            <EuiButton onClick={stopStream} color="danger">
+              Exit
+            </EuiButton>,
             <EuiButton
-              onClick={() => {
-                stopStream("stop");
-              }}
-              color="danger"
+              isDisabled={error || isLoading}
+              onClick={startStrean}
+              color="success"
             >
-              Stop
-            </EuiButton>,
-            <EuiButton onClick={stopStream} color="accent">
-              Pause
-            </EuiButton>,
-            <EuiButton onClick={startStrean} color="success">
               Start
             </EuiButton>,
           ]}
           paddingSize="l"
         />
-        {!started ? (
-          <EuiTitle style={{ textAlign: "center" }} size="l">
-            <h1>
-              Please press the start button to start the communication. <br />{" "}
-              Please wait for 20 seconds before starting
-            </h1>
-          </EuiTitle>
-        ) : isLoading ? (
+        {isLoading ? (
           loadingPrompt
         ) : error ? (
           errorPrompt
+        ) : !started ? (
+          <EuiTitle style={{ textAlign: "center" }} size="l">
+            <h1>
+              Please press the start button to start the data transfer. <br />
+            </h1>
+          </EuiTitle>
         ) : (
           <EuiFlexGrid columns={2}>
             {Object.keys(meterData).map((dataPoint, idx) => (
