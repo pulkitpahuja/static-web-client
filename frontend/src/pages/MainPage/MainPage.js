@@ -110,7 +110,7 @@ const MainPage = () => {
               Exit
             </EuiButton>,
             <EuiButton
-              isDisabled={error || isLoading}
+              isDisabled={error || isLoading || started}
               onClick={startStrean}
               color="success"
             >
