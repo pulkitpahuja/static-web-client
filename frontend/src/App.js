@@ -1,4 +1,6 @@
+import "polyfill-object.fromentries";
 import React from "react";
+
 import MainPage from "./pages/MainPage/MainPage";
 import { EuiProvider } from "@elastic/eui";
 import Demo from "./pages/DemoPage/Demo";
