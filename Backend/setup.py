@@ -10,7 +10,7 @@ if sys.platform == 'Win32':
 executables = [cx_Freeze.Executable("app.py", base=base)]
 
 cx_Freeze.setup(
-    name = "Ekta Instruments",
+    name = "Data monitoring App",
     options = {"build_exe": {"packages":["flask","flask_cors","serial","webui","time","sys","json","jinja2.ext","os","random","csv","threading",
     "struct","datetime","fpdf","xlsxwriter","signal"]}}, 
     version = "0.01",
